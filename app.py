@@ -93,9 +93,9 @@ event_fig = px.scatter(
 )
 
 minimap_dict = {
-    "AmbroseValley": "data/player_data/minimaps/AmbroseValley_Minimap.png",
-    "GrandRift": "data/player_data/minimaps/GrandRift_Minimap.png",
-    "Lockdown": "data/player_data/minimaps/Lockdown_Minimap.jpg"
+    "AmbroseValley": "minimaps/AmbroseValley_Minimap.png",
+    "GrandRift": "minimaps/GrandRift_Minimap.png",
+    "Lockdown": "minimaps/Lockdown_Minimap.jpg"
 }
 
 minimap_path = minimap_dict.get(map_filter)
