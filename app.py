@@ -8,7 +8,13 @@ st.set_page_config(layout="wide")
 st.title("LILA Player Journey Visualization Tool")
 
 # Load data
-df = pd.read_csv("backend/events.csv")
+import os
+import pandas as pd
+
+base_dir = os.path.dirname(__file__)
+csv_path = os.path.join(base_dir, "backend", "events.csv")
+
+df = pd.read_csv(csv_path)
 
 # Clean event column
 df["event"] = df["event"].astype(str)
