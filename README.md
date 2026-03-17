@@ -20,3 +20,4 @@ Run locally:
 
 pip install -r requirements.txt
 streamlit run app.py
+Live Demo: https://lila-player-tool.streamlit.app/
