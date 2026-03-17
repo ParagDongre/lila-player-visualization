@@ -6,10 +6,14 @@ from PIL import Image
 st.set_page_config(layout="wide")
 
 st.title("LILA Player Journey Visualization Tool")
-
+st.markdown(
+"""
+This tool helps level designers analyze player movement, combat zones, and map utilization
+using gameplay telemetry data.
+"""
+)
 # Load data
 import os
-import pandas as pd
 
 base_dir = os.path.dirname(__file__)
 csv_path = os.path.join(base_dir, "backend", "events.csv")
@@ -20,7 +24,24 @@ df["player_type"] = df["user_id"].apply(
     lambda x: "Bot" if str(x).startswith("bot") else "Human"
 )
 # Clean event column
+# Clean event column
 df["event"] = df["event"].astype(str)
+
+# Create structured event types (fallback logic)
+def classify_event(e):
+    e = e.lower()
+    if "kill" in e:
+        return "Kill"
+    elif "death" in e:
+        return "Death"
+    elif "loot" in e:
+        return "Loot"
+    elif "storm" in e:
+        return "Storm"
+    else:
+        return "Movement"
+
+df["event_type"] = df["event"].apply(classify_event)
 
 # Convert timestamp
 df["ts"] = pd.to_datetime(df["ts"])
@@ -99,9 +120,9 @@ event_fig = px.scatter(
     timeline_data,
     x="x",
     y="y",
-    color="event",
-    symbol="event",
-    hover_data=["user_id","event"]
+    color="event_type",
+    symbol="event_type",
+    hover_data=["user_id", "event"]
 )
 
 minimap_dict = {
@@ -136,43 +157,43 @@ st.plotly_chart(event_fig, use_container_width=True)
 # Heatmap
 # ------------------------
 
-if show_heatmap:
+# ------------------------
+# Heatmap
+# ------------------------
 
-    st.subheader("Player Activity Heatmap")
+if show_heatmap:
 
     st.subheader("Player Traffic Heatmap")
 
-traffic_heatmap = px.density_heatmap(
-    timeline_data,
-    x="x",
-    y="y"
-)
-
-st.plotly_chart(traffic_heatmap, use_container_width=True)
-
-if not kill_events.empty:
-
-    st.subheader("Kill Zones")
-
-    kill_heatmap = px.density_heatmap(
-        kill_events,
+    traffic_heatmap = px.density_heatmap(
+        timeline_data,
         x="x",
         y="y"
     )
 
-    st.plotly_chart(kill_heatmap, use_container_width=True)
+    st.plotly_chart(traffic_heatmap, use_container_width=True)
 
-if not death_events.empty:
+    if not kill_events.empty:
+        st.subheader("Kill Zones")
 
-    st.subheader("Death Zones")
+        kill_heatmap = px.density_heatmap(
+            kill_events,
+            x="x",
+            y="y"
+        )
 
-    death_heatmap = px.density_heatmap(
-        death_events,
-        x="x",
-        y="y"
-    )
+        st.plotly_chart(kill_heatmap, use_container_width=True)
 
-    st.plotly_chart(death_heatmap, use_container_width=True)
+    if not death_events.empty:
+        st.subheader("Death Zones")
+
+        death_heatmap = px.density_heatmap(
+            death_events,
+            x="x",
+            y="y"
+        )
+
+        st.plotly_chart(death_heatmap, use_container_width=True)
 
     st.subheader("Player Traffic Heatmap")
 
