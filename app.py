@@ -195,12 +195,5 @@ if show_heatmap:
 
         st.plotly_chart(death_heatmap, use_container_width=True)
 
-    st.subheader("Player Traffic Heatmap")
-
-traffic_heatmap = px.density_heatmap(
-    timeline_data,
-    x="x",
-    y="y"
-)
 
 st.plotly_chart(traffic_heatmap, use_container_width=True)
