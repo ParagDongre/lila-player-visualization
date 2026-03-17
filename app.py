@@ -194,6 +194,3 @@ if show_heatmap:
         )
 
         st.plotly_chart(death_heatmap, use_container_width=True)
-
-
-st.plotly_chart(traffic_heatmap, use_container_width=True)
